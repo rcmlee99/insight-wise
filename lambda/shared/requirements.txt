@@ -5,3 +5,4 @@ aws-lambda-powertools==2.31.0
 pymongo==4.6.1
 requests==2.31.0
 python-jwt==4.1.0
+pytest-cov=6.0.0
