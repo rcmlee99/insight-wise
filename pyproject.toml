@@ -20,9 +20,13 @@ dependencies = [
     "psycopg2-binary>=2.9.10",
     "pyjwt>=2.10.1",
     "pymongo>=4.11.1",
+    "pytest-cov>=6.0.0",
     "pytest>=8.3.4",
     "pytest-mock>=3.14.0",
     "python-dateutil>=2.9.0.post0",
     "python-jose>=3.4.0",
     "python-jwt>=4.1.0",
+    "shared>=0.0.32",
+    "flask-login>=0.6.3",
+    "flask-wtf>=1.2.2",
 ]

@@ -42,6 +42,8 @@ def get_all_items() -> List[Dict[str, Any]]:
 
 def get_item(item_id: str) -> Dict[str, Any]:
     try:
+        if not item_id:
+            raise Exception("Invalid ID: item_id cannot be None or empty")
         item = get_mongo_collection().find_one({'id': item_id}, {'_id': 0})
         return item if item else None
     except PyMongoError as e:
@@ -53,10 +55,12 @@ def create_item(item: Dict[str, Any]) -> None:
         get_mongo_collection().insert_one(item)
     except PyMongoError as e:
         logger.error(f"Error creating item: {str(e)}")
-        raise
+        raise Exception("Duplicate Key Error" if "duplicate key error" in str(e).lower() else str(e))
 
 def update_item(item_id: str, updates: Dict[str, Any]) -> None:
     try:
+        if not item_id:
+            raise Exception("Invalid ID: item_id cannot be None or empty")
         get_mongo_collection().update_one(
             {'id': item_id},
             {'$set': updates}
@@ -67,6 +71,8 @@ def update_item(item_id: str, updates: Dict[str, Any]) -> None:
 
 def delete_item(item_id: str) -> None:
     try:
+        if not item_id:
+            raise Exception("Invalid ID: item_id cannot be None or empty")
         get_mongo_collection().delete_one({'id': item_id})
     except PyMongoError as e:
         logger.error(f"Error deleting item {item_id}: {str(e)}")

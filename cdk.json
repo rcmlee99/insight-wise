@@ -1,5 +1,5 @@
 {
-  "app": "python app.py",
+  "app": "python cdk_app.py",
   "context": {
     "@aws-cdk/core/staging-by-default": true,
     "@aws-cdk/aws-lambda:recognizeVersionProps": true,

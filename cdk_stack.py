@@ -117,7 +117,7 @@ class ItemAPIStack(Stack):
         # Create Lambda layers
         shared_layer = _lambda.LayerVersion(
             self, "SharedLayer",
-            code=_lambda.Code.from_asset("lambda_functions/shared"),
+            code=_lambda.Code.from_asset("lambda/shared"),
             compatible_runtimes=[_lambda.Runtime.PYTHON_3_11],
             description="Layer containing shared utilities and external dependencies"
         )
@@ -136,7 +136,7 @@ class ItemAPIStack(Stack):
         mock_consumer = _lambda.Function(
             self, "MockKinesisConsumer",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            code=_lambda.Code.from_asset("lambda_functions"),
+            code=_lambda.Code.from_asset("lambda"),
             handler="mock_consumer.handler",
             environment=lambda_environment
         )
@@ -148,7 +148,7 @@ class ItemAPIStack(Stack):
         create_function = _lambda.Function(
             self, "CreateItemFunction",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            code=_lambda.Code.from_asset("lambda_functions"),
+            code=_lambda.Code.from_asset("lambda"),
             handler="create_item.handler",
             environment=lambda_environment,
             layers=[shared_layer]
@@ -158,7 +158,7 @@ class ItemAPIStack(Stack):
         get_items_function = _lambda.Function(
             self, "GetItemsFunction",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            code=_lambda.Code.from_asset("lambda_functions"),
+            code=_lambda.Code.from_asset("lambda"),
             handler="get_items.handler",
             environment=lambda_environment,
             layers=[shared_layer]
@@ -168,7 +168,7 @@ class ItemAPIStack(Stack):
         get_item_function = _lambda.Function(
             self, "GetItemFunction",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            code=_lambda.Code.from_asset("lambda_functions"),
+            code=_lambda.Code.from_asset("lambda"),
             handler="get_item.handler",
             environment=lambda_environment,
             layers=[shared_layer]
@@ -178,7 +178,7 @@ class ItemAPIStack(Stack):
         update_function = _lambda.Function(
             self, "UpdateItemFunction",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            code=_lambda.Code.from_asset("lambda_functions"),
+            code=_lambda.Code.from_asset("lambda"),
             handler="update_item.handler",
             environment=lambda_environment,
             layers=[shared_layer]
@@ -188,7 +188,7 @@ class ItemAPIStack(Stack):
         delete_function = _lambda.Function(
             self, "DeleteItemFunction",
             runtime=_lambda.Runtime.PYTHON_3_11,
-            code=_lambda.Code.from_asset("lambda_functions"),
+            code=_lambda.Code.from_asset("lambda"),
             handler="delete_item.handler",
             environment=lambda_environment,
             layers=[shared_layer]

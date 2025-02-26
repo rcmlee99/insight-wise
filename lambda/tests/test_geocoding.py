@@ -31,6 +31,19 @@ def test_get_coordinates(mock_get):
     coordinates = get_coordinates("10001")
     assert coordinates is None
 
+    # Test invalid JSON response
+    mock_get.side_effect = None
+    mock_get.return_value.status_code = 200
+    mock_get.return_value.json.side_effect = ValueError("Invalid JSON")
+    coordinates = get_coordinates("10001")
+    assert coordinates is None
+
+    # Test missing places in response
+    mock_get.return_value.json.side_effect = None
+    mock_get.return_value.json.return_value = {}
+    coordinates = get_coordinates("10001")
+    assert coordinates is None
+
 def test_calculate_distance_from_ny():
     # Test points at known distances from NY
     distance = calculate_distance_from_ny(40.7128, -74.0060)  # NY to NY
@@ -40,9 +53,19 @@ def test_calculate_distance_from_ny():
     distance_north = calculate_distance_from_ny(42.7128, -74.0060)  # North of NY
     assert distance_north > 0
 
+    # Test extreme coordinates
+    distance_far = calculate_distance_from_ny(90.0000, 0.0000)  # North Pole
+    assert distance_far > 0
+
 def test_get_direction_from_ny():
     # Test cardinal directions
     assert get_direction_from_ny(42.7128, -75.0060) == "NW"  # Northwest
     assert get_direction_from_ny(42.7128, -73.0060) == "NE"  # Northeast
     assert get_direction_from_ny(38.7128, -75.0060) == "SW"  # Southwest
     assert get_direction_from_ny(38.7128, -73.0060) == "SE"  # Southeast
+
+    # Test edge cases
+    assert get_direction_from_ny(40.7128, -75.0060) == "SW"  # Same latitude, west
+    assert get_direction_from_ny(40.7128, -73.0060) == "SE"  # Same latitude, east
+    assert get_direction_from_ny(41.7128, -74.0060) == "NW"  # Same longitude, north
+    assert get_direction_from_ny(39.7128, -74.0060) == "SW"  # Same longitude, south
