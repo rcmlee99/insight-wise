@@ -1,0 +1,28 @@
+[project]
+name = "repl-nix-workspace"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "aws-cdk-lib>=2.180.0",
+    "aws-lambda-powertools>=3.7.0",
+    "boto3>=1.37.1",
+    "constructs>=10.4.2",
+    "dnspython>=2.7.0",
+    "email-validator>=2.2.0",
+    "flask>=3.1.0",
+    "flask-sqlalchemy>=3.1.1",
+    "geopy>=2.4.1",
+    "gunicorn>=23.0.0",
+    "mongomock>=4.3.0",
+    "moto>=5.1.0",
+    "motor>=3.7.0",
+    "psycopg2-binary>=2.9.10",
+    "pyjwt>=2.10.1",
+    "pymongo>=4.11.1",
+    "pytest>=8.3.4",
+    "pytest-mock>=3.14.0",
+    "python-dateutil>=2.9.0.post0",
+    "python-jose>=3.4.0",
+    "python-jwt>=4.1.0",
+]

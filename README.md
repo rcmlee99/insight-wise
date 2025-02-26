@@ -1,89 +1,147 @@
-# AWS CDK REST API with Cognito, Python Lambda, and GitHub Actions CI
+# AWS Serverless API with CDK
 
-## Overview
-This project uses AWS CDK in TypeScript to create a REST API secured with Cognito. It connects to a Python Lambda function that interacts with a MongoDB database (mocked with `mongomock` for testing) and integrates with AWS services like Kinesis, SNS, and CloudWatch. A CI pipeline is set up using GitHub Actions to run unit tests.
+A serverless API built with AWS CDK, Lambda, and MongoDB for managing items with automatic geolocation and validation. The API includes comprehensive monitoring, logging, and authentication features.
 
-## Features
-- **Cognito Authentication** for API security
-- **Reject requests without a valid Bearer token** (any non-empty string is acceptable)
-- **Python Lambda** with MongoEngine for data persistence
-- CRUD operations for `Item` management:
-  - `POST /items`: Create a new item with validation
-  - `GET /items`: List all items
-  - `GET /items/{id}`: Get a specific item by ID
-  - `PATCH /items/{id}`: Update item details
-  - `DELETE /items/{id}`: Remove an item
-- **Kinesis Stream** for real-time data logging
-- **Stream logs to [Grafana](http://samplepy.grafana.net/)**
-- **SNS** integration for notifications
-- **CloudWatch Logs** for monitoring
-- **GitHub Actions CI Pipeline** for automated testing
+## Architecture
 
-## Microservices Design Approach
-This API is built using a microservices architecture with the following key principles:
+### Core Components
+- **AWS CDK**: Infrastructure as code for AWS resource management
+- **Lambda Functions**: Serverless compute for API endpoints
+- **MongoDB**: Database for item storage
+- **Amazon Cognito**: User authentication and authorization
+- **AWS CloudWatch**: Metrics and logging
+- **Kinesis**: Real-time log streaming and processing
+- **API Gateway**: RESTful API management
 
-1. **Separation of Concerns**
-   - **Authentication Service:** Managed by AWS Cognito.
-   - **Item Management Service:** Implemented using a dedicated Lambda function for CRUD operations.
-   - **Logging Service:** Real-time logs sent to Kinesis and visualized in Grafana.
-   - **Notification Service:** Event-driven notifications using SNS.
+### Features
+- Automatic geolocation based on postal codes
+- Distance and direction calculation from New York
+- JWT-based authentication
+- Real-time logging and monitoring
+- Comprehensive input validation
+- Centralized error handling
 
-2. **Scalability**
-   - Each service (e.g., Lambda, API Gateway, Kinesis) can scale independently based on load.
-   - Stateless Lambda functions allow for horizontal scaling.
+## API Endpoints
 
-3. **Resilience and Reliability**
-   - **API Gateway** handles validation and authentication before passing requests to the backend.
-   - **Event-driven architecture** with SNS and Kinesis enhances fault tolerance.
-   - **CloudWatch** provides monitoring and alerting.
+### Items API
+All endpoints require Bearer token authentication.
 
-4. **Security**
-   - **Cognito Authentication** ensures only authorized users can access the API.
-   - **API Gateway validation** prevents invalid payloads from reaching the backend.
-   - **IAM Policies** are used to restrict service permissions (e.g., SNS and Kinesis access).
-
-## Prerequisites
-- Node.js (v16 or above)
-- AWS CLI configured
-- Python 3.9+
-- Docker (for Lambda deployment testing)
-
-## Setup Instructions
-1. **Install dependencies**
-   ```bash
-   npm install
-   ```
-
-2. **Bootstrap the AWS CDK**
-   ```bash
-   npx cdk bootstrap
-   ```
-
-3. **Deploy the stack**
-   ```bash
-   npx cdk deploy
-   ```
-
-4. **Run Tests Locally**
-   ```bash
-   pip install -r requirements.txt
-   pytest tests/
-   ```
-
-## CI Pipeline
-The GitHub Actions workflow automatically runs tests on every push or pull request to the `main` branch.
-
-## Project Structure
+#### Create Item
 ```
-.
-├── lambda/
-│   └── handler.py        # Python Lambda handler
-├── tests/
-│   └── test_handler.py   # Unit tests for Lambda
-├── lib/
-│   └── api-stack.ts      # AWS CDK API stack
-├── .github/
-│   └── workflows/
-│       └── python-lambda-ci.yml  # GitHub Actions CI pipeline
-└── README.md
+POST /items
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "name": "Example Item",
+    "postcode": "10001",
+    "startDate": "2025-03-26T00:00:00Z",
+    "users": ["John Doe"]
+}
 ```
+
+#### Get All Items
+```
+GET /items
+Authorization: Bearer <token>
+```
+
+#### Get Single Item
+```
+GET /items/{id}
+Authorization: Bearer <token>
+```
+
+#### Update Item
+```
+PATCH /items/{id}
+Content-Type: application/json
+Authorization: Bearer <token>
+
+{
+    "name": "Updated Name",
+    "postcode": "10002"
+}
+```
+
+#### Delete Item
+```
+DELETE /items/{id}
+Authorization: Bearer <token>
+```
+
+## Monitoring and Logging
+
+### CloudWatch Metrics
+- API Latency
+- Status Code Distribution
+- Error Rates
+- Memory Utilization
+
+### Kinesis Log Streaming
+- Real-time log aggregation
+- Structured JSON logging
+- Lambda PowerTools integration
+- Mock consumer for log processing
+
+### CloudWatch Dashboard
+Provides visibility into:
+- API performance metrics
+- Error rates and patterns
+- Resource utilization
+- Authentication status
+
+## Development Setup
+
+### Prerequisites
+- Python 3.11
+- AWS CDK CLI
+- AWS CLI configured with appropriate credentials
+- MongoDB instance or connection string
+
+### Environment Variables
+```
+USER_POOL_ID=<Cognito User Pool ID>
+CLIENT_ID=<Cognito Client ID>
+MONGODB_URI=<MongoDB Connection String>
+```
+
+### Installation
+1. Install dependencies:
+```bash
+pip install -r lambda_functions/shared/requirements.txt
+pip install -r lambda_functions/requirements-dev.txt
+```
+
+2. Deploy the stack:
+```bash
+cdk deploy
+```
+
+### Testing
+Run the test suite:
+```bash
+cd lambda_functions
+PYTHONPATH=$PYTHONPATH:. pytest tests/ -v
+```
+
+## Security
+- JWT token validation
+- Cognito user pool integration
+- API Gateway authorization
+- Input validation and sanitization
+- Secure MongoDB connection
+
+## Error Handling
+- Standardized error responses
+- Detailed error logging
+- Error tracking via CloudWatch
+- Validation error details
+
+## Contributing
+1. Fork the repository
+2. Create a feature branch
+3. Submit a pull request
+
+## License
+This project is licensed under the MIT License - see the LICENSE file for details.
