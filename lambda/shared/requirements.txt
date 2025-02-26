@@ -1,0 +1,7 @@
+geopy==2.4.1
+python-dateutil==2.9.0
+boto3==1.37.1
+aws-lambda-powertools==2.31.0
+pymongo==4.6.1
+requests==2.31.0
+python-jwt==4.1.0
