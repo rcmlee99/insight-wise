@@ -109,8 +109,8 @@ MONGODB_URI=<MongoDB Connection String>
 ### Installation
 1. Install dependencies:
 ```bash
-pip install -r lambda_functions/shared/requirements.txt
-pip install -r lambda_functions/requirements-dev.txt
+pip install -r lambda/shared/requirements.txt
+pip install -r lambda/requirements-dev.txt
 ```
 
 2. Deploy the stack:
@@ -121,7 +121,7 @@ cdk deploy
 ### Testing
 Run the test suite:
 ```bash
-cd lambda_functions
+cd lambda
 PYTHONPATH=$PYTHONPATH:. pytest tests/ -v
 ```
 
